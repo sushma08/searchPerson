@@ -38571,41 +38571,27 @@
 	          )
 	        );
 	      });
-	      // var photos = _.map(this.state.photos, (photo,i)=>{
-	      //     return <img key={i} src={photo.url}alt="Smiley face" height="100" width="100"/>
-	      // });
-	      // var photos = _.slice(0,1){this.state.photos}
 	      return _react2.default.createElement(
 	        'div',
 	        { id: 'person' },
 	        _react2.default.createElement(
 	          'h3',
 	          null,
-	          'Status:',
-	          this.state.status
+	          _react2.default.createElement('img', { src: this.state.photoURL, height: '100', width: '100' })
 	        ),
 	        _react2.default.createElement(
 	          'h3',
 	          null,
-	          'Photo:',
-	          _react2.default.createElement('img', { src: this.state.photoURL, alt: 'Smiley face', height: '100', width: '100' })
-	        ),
-	        _react2.default.createElement(
-	          'h3',
-	          null,
-	          'Full Name:',
 	          this.state.fullName
 	        ),
 	        _react2.default.createElement(
 	          'h3',
 	          null,
-	          'Location:',
 	          this.state.location
 	        ),
 	        _react2.default.createElement(
 	          'h3',
 	          null,
-	          'Social Profiles:',
 	          _react2.default.createElement(
 	            'ul',
 	            null,
@@ -38614,10 +38600,6 @@
 	        )
 	      );
 	    }
-	    // {this.state.photo}
-	    // <h3>Photo:<ul>{photos}</ul></h3>
-	    // <h3>One Photo:<img src={this.state.photo} height="100" width="100"/></h3>
-
 	  }, {
 	    key: 'search',
 	    value: function search(query) {
@@ -38626,14 +38608,21 @@
 	      console.log(query);
 	      var url = 'https://api.fullcontact.com/v2/person.json?email=' + query + '&apiKey=ac357c4b577b261f';
 	      console.log(url);
-	      _superagent2.default.get(url).then(function (response) {
-	        _this2.setState({
-	          status: response.body.status,
-	          photoURL: response.body.photos[0].url,
-	          fullName: response.body.contactInfo.fullName,
-	          location: response.body.demographics.locationGeneral,
-	          socialProfiles: response.body.socialProfiles
-	        });
+	      _superagent2.default.get(url).end(function (error, response) {
+	        if (!error && response) {
+	          if (response.body.status == 200) {
+	            _this2.setState({
+	              photoURL: response.body.photos[0].url,
+	              fullName: response.body.contactInfo.fullName,
+	              location: response.body.demographics.locationGeneral,
+	              socialProfiles: response.body.socialProfiles
+	            });
+	          } else {
+	            alert("Email id not present in Person API");
+	          }
+	        } else {
+	          alert(error);
+	        }
 	      });
 	    }
 	  }]);
@@ -38680,10 +38669,28 @@
 	  }
 
 	  _createClass(Input, [{
+	    key: "validateEmail",
+	    value: function validateEmail(value) {
+	      var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	      return re.test(value);
+	    }
+
+	    //   var styles = {
+	    //   background: 'lightblue',
+	    //   color:      'darkred',
+	    //   marginTop: 100,
+	    //   fontSize: 50
+	    // };
+
+	  }, {
 	    key: "handleChange",
 	    value: function handleChange(e) {
 	      var email = this.refs.textBox.value;
-	      this.props.onChange(email);
+	      if (this.validateEmail(email)) {
+	        this.props.onChange(email);
+	      } else {
+	        alert("Invalid email address");
+	      }
 	    }
 	  }, {
 	    key: "render",
@@ -38693,7 +38700,7 @@
 	      return _react2.default.createElement(
 	        "div",
 	        { className: "form" },
-	        _react2.default.createElement("input", { ref: "textBox", type: "email" }),
+	        _react2.default.createElement("input", { ref: "textBox", type: "email", required: true, placeholder: "Enter your Email" }),
 	        _react2.default.createElement(
 	          "button",
 	          { onClick: function onClick(e) {
