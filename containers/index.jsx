@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Person from './components/person.jsx';
-import Input from './components/input.jsx';
+import Person from '../components/person.jsx';
+import Input from '../components/input.jsx';
  
 class Main extends React.Component {
 
   constructor(){
     super();
-    this.state = {};//email:'brad@fullcontact.com'
+    this.state = {};
   }
 
   changeEmail(newEmail) {

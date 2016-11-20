@@ -1,6 +1,6 @@
 import React from 'react';
 import Request from 'superagent';
-import _ from 'lodash';
+import {PersonDisplay} from './PersonDisplay.jsx';
  
 export default class Person extends React.Component {
 
@@ -9,10 +9,6 @@ export default class Person extends React.Component {
     this.state = {};
   }
 
-  // componentWillMount(){
-  //   this.search(this.props.email);
-  // }
-
   componentWillReceiveProps(nextProps){
     if(this.props.email != nextProps.email){
       this.search(nextProps.email);
@@ -20,16 +16,13 @@ export default class Person extends React.Component {
   }
 
   render() {
-    var socialProfiles = _.map(this.state.socialProfiles, (socialProfile,j)=>{
-      return <li key={j}><a href={socialProfile.url}>{socialProfile.url}</a></li>;
-    });
     return (
-        <div id="person">
-          <h3><img src={this.state.photoURL} height="100" width="100"/></h3>
-          <h3>{this.state.fullName}</h3>
-          <h3>{this.state.location}</h3>
-          <h3><ul>{socialProfiles}</ul></h3>
-        </div>
+      <div>
+      <PersonDisplay photoURL={this.state.photoURL}
+                    fullName={this.state.fullName}
+                    location={this.state.location}
+                    socialProfiles={this.state.socialProfiles}/>
+      </div>
     );
   }
 
@@ -39,19 +32,48 @@ export default class Person extends React.Component {
     console.log(url);
     Request.get(url).end((error, response) => {
               if (!error && response){
-                if(response.body.status==200){
+                var status = response.body.status, photo, name, genLocation, socialProfile;
+
+                if(response.body.photos!==undefined){
+                  photo = response.body.photos[0].url;
+                }else{
+                  photo = "../app/extra/noimage.jpg";
+                }
+
+                if(response.body.contactInfo!==undefined){
+                  name = response.body.contactInfo.fullName;
+                }else{
+                  name = "!!Sorry, name not specified!!";
+                }
+
+                if(response.body.demographics!==undefined){
+                  genLocation = response.body.demographics.locationGeneral;
+                }else{
+                  genLocation = "!!Sorry, location not specified!!";
+                }
+
+                if(response.body.socialProfiles!==undefined){
+                  socialProfile = response.body.socialProfiles;
+                }else{
+                  socialProfile = "#";
+                }
+
+                if(status==200){
                   this.setState({
-                    photoURL: response.body.photos[0].url,
-                    fullName: response.body.contactInfo.fullName,
-                    location: response.body.demographics.locationGeneral,
-                    socialProfiles: response.body.socialProfiles
+                    photoURL: photo,
+                    fullName: name,
+                    location: genLocation,
+                    socialProfiles: socialProfile
                   });
                 }else{
                   alert("Email id not present in Person API");
                 }
+
               }else{
                 alert(error);
               }
       });
   }
 }
+
+export {Person as personAPI};

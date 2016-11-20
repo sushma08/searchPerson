@@ -12,13 +12,6 @@ export default class Input extends React.Component {
     return re.test(value);
   }
 
-//   var styles = {
-//   background: 'lightblue',
-//   color:      'darkred',
-//   marginTop: 100,
-//   fontSize: 50
-// };
-
   handleChange(e) {
     var email = this.refs.textBox.value;
     if(this.validateEmail(email)){
@@ -30,9 +23,9 @@ export default class Input extends React.Component {
 
   render() {
     return (
-        <div className="form">
-          <input ref="textBox" type="email" required placeholder="Enter your Email"/>
-          <button onClick={(e) => {this.handleChange();}}>Search User</button>
+        <div className="col-sm-3 col-sm-offset-1 text-center">
+          <input className="form-control" style={{marginTop:'200', marginBottom:'40'}} ref="textBox" type="email" required placeholder="Enter your Email"/>
+          <button className="btn btn-success" onClick={(e) => {this.handleChange();}}>Search User</button>
         </div>
     );
   }

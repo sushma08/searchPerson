@@ -68,11 +68,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _person = __webpack_require__(167);
+	var _person = __webpack_require__(160);
 
 	var _person2 = _interopRequireDefault(_person);
 
-	var _input = __webpack_require__(168);
+	var _input = __webpack_require__(169);
 
 	var _input2 = _interopRequireDefault(_input);
 
@@ -92,7 +92,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (Main.__proto__ || Object.getPrototypeOf(Main)).call(this));
 
-	    _this.state = {}; //email:'brad@fullcontact.com'
+	    _this.state = {};
 	    return _this;
 	  }
 
@@ -19821,6 +19821,131 @@
 /* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.personAPI = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _superagent = __webpack_require__(161);
+
+	var _superagent2 = _interopRequireDefault(_superagent);
+
+	var _PersonDisplay = __webpack_require__(168);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Person = function (_React$Component) {
+	  _inherits(Person, _React$Component);
+
+	  function Person() {
+	    _classCallCheck(this, Person);
+
+	    var _this = _possibleConstructorReturn(this, (Person.__proto__ || Object.getPrototypeOf(Person)).call(this));
+
+	    _this.state = {};
+	    return _this;
+	  }
+
+	  _createClass(Person, [{
+	    key: 'componentWillReceiveProps',
+	    value: function componentWillReceiveProps(nextProps) {
+	      if (this.props.email != nextProps.email) {
+	        this.search(nextProps.email);
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_PersonDisplay.PersonDisplay, { photoURL: this.state.photoURL,
+	          fullName: this.state.fullName,
+	          location: this.state.location,
+	          socialProfiles: this.state.socialProfiles })
+	      );
+	    }
+	  }, {
+	    key: 'search',
+	    value: function search(query) {
+	      var _this2 = this;
+
+	      console.log(query);
+	      var url = 'https://api.fullcontact.com/v2/person.json?email=' + query + '&apiKey=ac357c4b577b261f';
+	      console.log(url);
+	      _superagent2.default.get(url).end(function (error, response) {
+	        if (!error && response) {
+	          var status = response.body.status,
+	              photo,
+	              name,
+	              genLocation,
+	              socialProfile;
+
+	          if (response.body.photos !== undefined) {
+	            photo = response.body.photos[0].url;
+	          } else {
+	            photo = "../app/extra/noimage.jpg";
+	          }
+
+	          if (response.body.contactInfo !== undefined) {
+	            name = response.body.contactInfo.fullName;
+	          } else {
+	            name = "!!Sorry, name not specified!!";
+	          }
+
+	          if (response.body.demographics !== undefined) {
+	            genLocation = response.body.demographics.locationGeneral;
+	          } else {
+	            genLocation = "!!Sorry, location not specified!!";
+	          }
+
+	          if (response.body.socialProfiles !== undefined) {
+	            socialProfile = response.body.socialProfiles;
+	          } else {
+	            socialProfile = "#";
+	          }
+
+	          if (status == 200) {
+	            _this2.setState({
+	              photoURL: photo,
+	              fullName: name,
+	              location: genLocation,
+	              socialProfiles: socialProfile
+	            });
+	          } else {
+	            alert("Email id not present in Person API");
+	          }
+	        } else {
+	          alert(error);
+	        }
+	      });
+	    }
+	  }]);
+
+	  return Person;
+	}(_react2.default.Component);
+
+	exports.default = Person;
+	exports.personAPI = Person;
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/**
 	 * Root reference for iframes.
 	 */
@@ -19835,9 +19960,9 @@
 	  root = this;
 	}
 
-	var Emitter = __webpack_require__(161);
-	var requestBase = __webpack_require__(162);
-	var isObject = __webpack_require__(163);
+	var Emitter = __webpack_require__(162);
+	var requestBase = __webpack_require__(163);
+	var isObject = __webpack_require__(164);
 
 	/**
 	 * Noop.
@@ -19849,7 +19974,7 @@
 	 * Expose `request`.
 	 */
 
-	var request = module.exports = __webpack_require__(164).bind(null, Request);
+	var request = module.exports = __webpack_require__(165).bind(null, Request);
 
 	/**
 	 * Determine XHR.
@@ -20800,7 +20925,7 @@
 
 
 /***/ },
-/* 161 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -20969,13 +21094,13 @@
 
 
 /***/ },
-/* 162 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * Module of mixed-in functions shared between node and client code
 	 */
-	var isObject = __webpack_require__(163);
+	var isObject = __webpack_require__(164);
 
 	/**
 	 * Clear previous timeout.
@@ -21347,7 +21472,7 @@
 
 
 /***/ },
-/* 163 */
+/* 164 */
 /***/ function(module, exports) {
 
 	/**
@@ -21366,7 +21491,7 @@
 
 
 /***/ },
-/* 164 */
+/* 165 */
 /***/ function(module, exports) {
 
 	// The node and browser modules expose versions of this with the
@@ -21404,7 +21529,7 @@
 
 
 /***/ },
-/* 165 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {/**
@@ -38484,10 +38609,10 @@
 	  }
 	}.call(this));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(166)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(167)(module)))
 
 /***/ },
-/* 166 */
+/* 167 */
 /***/ function(module, exports) {
 
 	module.exports = function(module) {
@@ -38503,14 +38628,15 @@
 
 
 /***/ },
-/* 167 */
+/* 168 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	    value: true
 	});
+	exports.PersonDisplay = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -38518,13 +38644,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _superagent = __webpack_require__(160);
-
-	var _superagent2 = _interopRequireDefault(_superagent);
-
-	var _lodash = __webpack_require__(165);
+	var _lodash = __webpack_require__(166);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
+
+	var _person = __webpack_require__(160);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38534,106 +38658,80 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Person = function (_React$Component) {
-	  _inherits(Person, _React$Component);
+	var PersonDisplay = function (_React$Component) {
+	    _inherits(PersonDisplay, _React$Component);
 
-	  function Person() {
-	    _classCallCheck(this, Person);
+	    function PersonDisplay() {
+	        _classCallCheck(this, PersonDisplay);
 
-	    var _this = _possibleConstructorReturn(this, (Person.__proto__ || Object.getPrototypeOf(Person)).call(this));
+	        var _this = _possibleConstructorReturn(this, (PersonDisplay.__proto__ || Object.getPrototypeOf(PersonDisplay)).call(this));
 
-	    _this.state = {};
-	    return _this;
-	  }
-
-	  // componentWillMount(){
-	  //   this.search(this.props.email);
-	  // }
-
-	  _createClass(Person, [{
-	    key: 'componentWillReceiveProps',
-	    value: function componentWillReceiveProps(nextProps) {
-	      if (this.props.email != nextProps.email) {
-	        this.search(nextProps.email);
-	      }
+	        _this.state = {};
+	        return _this;
 	    }
-	  }, {
-	    key: 'render',
-	    value: function render() {
-	      var socialProfiles = _lodash2.default.map(this.state.socialProfiles, function (socialProfile, j) {
-	        return _react2.default.createElement(
-	          'li',
-	          { key: j },
-	          _react2.default.createElement(
-	            'a',
-	            { href: socialProfile.url },
-	            socialProfile.url
-	          )
-	        );
-	      });
-	      return _react2.default.createElement(
-	        'div',
-	        { id: 'person' },
-	        _react2.default.createElement(
-	          'h3',
-	          null,
-	          _react2.default.createElement('img', { src: this.state.photoURL, height: '100', width: '100' })
-	        ),
-	        _react2.default.createElement(
-	          'h3',
-	          null,
-	          this.state.fullName
-	        ),
-	        _react2.default.createElement(
-	          'h3',
-	          null,
-	          this.state.location
-	        ),
-	        _react2.default.createElement(
-	          'h3',
-	          null,
-	          _react2.default.createElement(
-	            'ul',
-	            null,
-	            socialProfiles
-	          )
-	        )
-	      );
-	    }
-	  }, {
-	    key: 'search',
-	    value: function search(query) {
-	      var _this2 = this;
 
-	      console.log(query);
-	      var url = 'https://api.fullcontact.com/v2/person.json?email=' + query + '&apiKey=ac357c4b577b261f';
-	      console.log(url);
-	      _superagent2.default.get(url).end(function (error, response) {
-	        if (!error && response) {
-	          if (response.body.status == 200) {
-	            _this2.setState({
-	              photoURL: response.body.photos[0].url,
-	              fullName: response.body.contactInfo.fullName,
-	              location: response.body.demographics.locationGeneral,
-	              socialProfiles: response.body.socialProfiles
+	    _createClass(PersonDisplay, [{
+	        key: 'componentWillReceiveProps',
+	        value: function componentWillReceiveProps(nextProps) {
+	            this.setState({
+	                photo: nextProps.photoURL,
+	                name: nextProps.fullName,
+	                loc: nextProps.location,
+	                socialProf: nextProps.socialProfiles
 	            });
-	          } else {
-	            alert("Email id not present in Person API");
-	          }
-	        } else {
-	          alert(error);
 	        }
-	      });
-	    }
-	  }]);
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var socialProf = _lodash2.default.map(this.state.socialProf, function (socialProfile, j) {
+	                return _react2.default.createElement(
+	                    'li',
+	                    { key: j },
+	                    _react2.default.createElement(
+	                        'a',
+	                        { href: socialProfile.url },
+	                        socialProfile.url
+	                    )
+	                );
+	            });
+	            return _react2.default.createElement(
+	                'div',
+	                { id: 'person', className: 'col-sm-6 col-sm-offset-1 text-center' },
+	                _react2.default.createElement(
+	                    'h3',
+	                    null,
+	                    _react2.default.createElement('img', { src: this.state.photo, height: '100', width: '100' })
+	                ),
+	                _react2.default.createElement(
+	                    'h3',
+	                    null,
+	                    this.state.name
+	                ),
+	                _react2.default.createElement(
+	                    'h3',
+	                    null,
+	                    this.state.loc
+	                ),
+	                _react2.default.createElement(
+	                    'h3',
+	                    null,
+	                    _react2.default.createElement(
+	                        'ul',
+	                        null,
+	                        socialProf
+	                    )
+	                )
+	            );
+	        }
+	    }]);
 
-	  return Person;
+	    return PersonDisplay;
 	}(_react2.default.Component);
 
-	exports.default = Person;
+	exports.PersonDisplay = PersonDisplay;
 
 /***/ },
-/* 168 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -38674,14 +38772,6 @@
 	      var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 	      return re.test(value);
 	    }
-
-	    //   var styles = {
-	    //   background: 'lightblue',
-	    //   color:      'darkred',
-	    //   marginTop: 100,
-	    //   fontSize: 50
-	    // };
-
 	  }, {
 	    key: "handleChange",
 	    value: function handleChange(e) {
@@ -38699,11 +38789,11 @@
 
 	      return _react2.default.createElement(
 	        "div",
-	        { className: "form" },
-	        _react2.default.createElement("input", { ref: "textBox", type: "email", required: true, placeholder: "Enter your Email" }),
+	        { className: "col-sm-3 col-sm-offset-1 text-center" },
+	        _react2.default.createElement("input", { className: "form-control", style: { marginTop: '200', marginBottom: '40' }, ref: "textBox", type: "email", required: true, placeholder: "Enter your Email" }),
 	        _react2.default.createElement(
 	          "button",
-	          { onClick: function onClick(e) {
+	          { className: "btn btn-success", onClick: function onClick(e) {
 	              _this2.handleChange();
 	            } },
 	          "Search User"
